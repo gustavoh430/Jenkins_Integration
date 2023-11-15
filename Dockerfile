@@ -1,6 +1,7 @@
 FROM jenkins/jenkins
 USER root
 RUN apt-get update && apt-get install docker-ce
+RUN apt-get update && apt-get install lsb-release
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
 RUN echo "deb [arch=$(dpkg --print-architecture) \
   signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
