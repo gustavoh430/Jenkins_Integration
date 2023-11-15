@@ -23,9 +23,31 @@ Obs. The image already contain all plugins we need.
 Then, we run the image just created to deploy our container.
 
 ```code
-docker run -it -p 8080:8080 -d -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home jenkins-docker
+ docker run --name jenkins  -p 8081:8080 -d  -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home jenkins-docker
 ```
+
+
 
 "**-v /var/run/docker.sock:/var/run/docker.sock**": This flag mounts the Docker socket on the host machine to the Docker socket inside the container. This allows the Jenkins instance to communicate with the Docker daemon.
 
 "**-v jenkins_home:/var/jenkins_home**": This flag mounts a directory on the host machine to the /var/jenkins_home directory inside the container. This is where Jenkins stores its configuration and data.
+
+
+After that, we must configure our Jenkins. The following image will pop up and we must insert a code to unlock jenkins:
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/237a0aab-c440-4a85-a53c-9d672c72fa30)
+
+
+In order to achieve that, we type the code below to get the passwort to install jenkins:
+
+```code
+ docker logs jenkins
+```
+
+This code will get the container logs as showed below. 
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/bf4b5165-9f40-4da8-9c90-0d2f4b0b1f47)
+
+Finally, we copy the code from the log and paste in jenkins. Then, you only need to sign up.
+
+
