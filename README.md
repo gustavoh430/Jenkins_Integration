@@ -107,3 +107,28 @@ User: admin
 Password: admin
 
 
+Going ahead, it is necessary to install a package inside our jenkins path to make our just created caontainer communicate with jenkins. To do that, firstly, create a sonar-scanner directory under /var/jenkins_home and, then, download SonarQube Scanner (wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip)
+
+```code
+ docker exec -it jenkins bash
+```
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/0f1202e9-8bb3-489b-b8cb-e2646dcfb9b8)
+
+In case which you do not have "wget" installed, use:
+
+```code
+ apt-get install wget
+```
+
+Download SonarQube package:
+
+```code
+ wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+```
+
+Then, unzip it:
+
+```code
+ unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+```
