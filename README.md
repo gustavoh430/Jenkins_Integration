@@ -18,8 +18,6 @@ First of all, it is necessary to create an image out of the code I shared (the D
 docker build -t jenkins-docker . 
 ```
 
-Obs. The image already contain all plugins we need.
-
 Then, we run the image just created to deploy our container.
 
 ```code
@@ -48,6 +46,17 @@ This code will get the container logs as showed below.
 
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/bf4b5165-9f40-4da8-9c90-0d2f4b0b1f47)
 
-Finally, we copy the code from the log and paste in jenkins. Then, you only need to sign up.
+Finally, we copy the code from the log and paste it on jenkins. Then, choose to install the standard packages and sign up.
+
+
+## Configuring Maven
+
+We already downloaded it during the image creation. With that in mind, we just need to download the Maven plugin and inform jenkins where our package lies on (feel free to upgrade jenkins).
+
+Go to "Manage Jenkins -> Plugins -> Available Plugins" and look for "Maven". Choose "Maven Integration" like the image below.
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/730f1abb-20c8-475b-a2eb-084fd03df85a)
+
+
 
 
