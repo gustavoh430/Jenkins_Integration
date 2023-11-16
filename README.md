@@ -132,3 +132,24 @@ Then, unzip it:
 ```code
  unzip sonar-scanner-cli-5.0.1.3006-linux.zip
 ```
+
+After that, go to Manage Jenkins -> Tools and click on "Add SonarQube Installation" and configure like the image below:
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/cff9c7a1-69c0-416b-a473-6114ace50b18)
+
+Click on "Apply" and "Save".
+
+The, we go to our SonarQube from http://localhost:9000, click on "My Account" -> "Security" -> "Generate Token"
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/1c12cca6-ba27-4f8b-88bc-645ca81ae253)
+
+After that, we go back to Jenkins. There, go to "Manage Jenkins" -> "System" -> SonarQube Servers
+
+Firstly, we define a name to this server (I choose "Sonar"). Then we inform "http://localhost:9000" as the Server url.
+After these steps, we click on "Advanced" -> "+ Add" -> "Jenkins". When a new window pops up, we choose "Secret Text" in "Kind", paste our Sonar key there and give an "id" to this key (I named it as "Sonar_Secret"
+
+Finally, just pick the token secret just create from the list in "Server Authentication token"
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/3d69d5b6-b1a8-4939-8c8f-05dbd8d53613)
+
+
