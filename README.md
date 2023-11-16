@@ -58,5 +58,52 @@ Go to "Manage Jenkins -> Plugins -> Available Plugins" and look for "Maven". Cho
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/730f1abb-20c8-475b-a2eb-084fd03df85a)
 
 
+After installing the plugin, we go to "Manage Jenkins -> Tools -> look for "Jenkins Installations" and click on "Add Maven". With that, we fill the fields out like the image below. ]
+Apply and save it.
+
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/faac3e42-60fe-4fc5-a074-c3b9d9b0a386)
+
+
+We can already get the other plugins which will be necessary:
+
+Blue Ocean
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/a00e608a-cf3c-40b2-8cb8-1f527d50d0bc)
+
+
+SonarQube Scanner
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/fdb831c5-3aca-4b59-8f56-6bf650865ecf)
+
+
+GrypeScanner
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/fa23fc5f-20c4-4e08-9495-9a1707a5fe72)
+
+
+Docker Pipeline
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/360c7e22-018e-4690-8b4e-c87e8076a489)
+
+
+## Configuring SonarQube
+
+Pull the Sonar image from Docker Hub, using:
+
+```code
+ docker pull sonarqube
+```
+
+Then, run this image to create a container em port 9000.
+
+```code
+ docker run -d --name sonarqube -p 9000:9000 sonarqube
+```
+
+Access it from http://localhost:9000 and login with the following credentials:
+
+User: admin
+Password: admin
 
 
