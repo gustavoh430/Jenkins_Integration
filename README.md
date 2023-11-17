@@ -415,7 +415,21 @@ Access the project we have created befone on SonarQube, through "http://localhos
 
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/0bd12f4c-907a-472e-85e8-0ee3831b91a5)
 
+
 # Checking the image report generated from Grype
 
+Still in Blue Ocean, click on "Check Image Security: Grype" step and, then, on "Vulnerability scan with grype".
 
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/0139179e-c3b7-4983-8e0f-e00cf92bb185)
+
+Here, we have a summary of grype scanning. However, if we want to see a more detailed information, click on "Artifacts" on the top of the page and download the archive "myScanResult.txt"
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/1aead342-9fe8-49b7-91d9-b6c129dd97ef)
+
+
+# Ckecking test results
+
+On Blue Ocean Page, click on "Tests". This will return the following information (saying how many tests have passed).
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/c7d18b02-d146-4268-abac-1ecf0cb1d91e)
 
