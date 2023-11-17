@@ -244,4 +244,23 @@ Go to credentials (follows the steps mentioned above) and create a credentials w
 
 Remember to create a repository on DockerHub ("https://github.com/gustavoh430/Docker-EKS")
 
+## Setting up Grype
+
+We must follow the Grype Documtation to install it properly (https://github.com/anchore/grype/blob/main/README.md).
+
+Basically, we only need to install a package on a certain folder and install grype plugin.
+
+1. Grype package
+
+```code
+docker exec -it jenkins bash
+curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+```
+
+2. Grype plugin
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/81673999-6812-4ac2-aa87-c62dfeafc33e)
+
+
+
 
