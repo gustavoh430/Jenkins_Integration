@@ -231,8 +231,17 @@ After these steps, we click on "Advanced" -> "+ Add" -> "Jenkins". When a new wi
 
 Finally, just pick the token secret just create from the list in "Server Authentication token" and click on "Create Credential". There, we choose "Secret Text" as "Kind". We also provide our SonarQube token in "Secret" and we must also choose an ID to our Secret.
 
+
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/a162fe08-0e1a-4a37-905f-6acb4c0e9669)
 
 With all these steps followed, we have just configured our SonarQube Scanner.
+
+## Creating Docker Credentials
+
+Go to credentials (follows the steps mentioned above) and create a credentials with "Kind" equals to "Username with Password". Here we use our Docker Hub Credentials as username and password.
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/bcb46103-c76d-40af-b8cc-9234d9d1586e)
+
+Remember to create a repository on DockerHub ("https://github.com/gustavoh430/Docker-EKS")
 
 
