@@ -213,17 +213,26 @@ Give a name to your Sonar repository and click "Next".
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/175e2489-dcca-48dc-8c1c-4ecbe63d18e3)
 
 Then, flag "Use the Global Setting" and click on "Create Project"
-As soon as we follow these steps, we are ready to 
+As soon as we follow these steps, we are ready to click on "Locally" to generate a access token which will be used to connect from Jenkins.
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/2f332a51-ff3a-40ca-9ee2-2041cbe81d72)
+
+Copy the code and click on "Continue"
+
+code generated: sqp_1c85b1f08775b76009d1be84e9a1699d8af9894e
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/e2ae8f18-5e6f-4dc4-b1eb-98c2ff32d815)
 
 
+After that, we go back to Jenkins. There, we go to "Manage Jenkins" -> "Credentials" -> "System" -> "Global credentials (unrestricted)"
 
-After that, we go back to Jenkins. There, go to "Manage Jenkins" -> "System" -> SonarQube Servers
-
-Firstly, we define a name to this server (I choose "Sonar"). Then we inform "http://localhost:9000" as the Server url.
+Firstly, we define a name to this server (I choose "Sonar").
 After these steps, we click on "Advanced" -> "+ Add" -> "Jenkins". When a new window pops up, we choose "Secret Text" in "Kind", paste our Sonar key there and give an "id" to this key (I named it as "Sonar_Secret"
 
-Finally, just pick the token secret just create from the list in "Server Authentication token"
+Finally, just pick the token secret just create from the list in "Server Authentication token" and click on "Create Credential". There, we choose "Secret Text" as "Kind". We also provide our SonarQube token in "Secret" and we must also choose an ID to our Secret.
 
-![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/3d69d5b6-b1a8-4939-8c8f-05dbd8d53613)
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/a162fe08-0e1a-4a37-905f-6acb4c0e9669)
+
+With all these steps followed, we have just configured our SonarQube Scanner.
 
 
