@@ -1,4 +1,5 @@
-![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/f8a18cd2-3cf3-4dda-b0eb-545e942f368c)
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/46ca53bc-31b5-49f2-94eb-985fbe1b0ca3)
+
 
 # Jenkins pipeline
 
@@ -9,7 +10,7 @@ The final pipeline will looks like the image below:
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/8375fd91-23d2-448f-a1ca-c135dbd3ec87)
 
 
-The project uses GitHub plugin to clone our application, maven to build our java app, JUnit 5 to test, Docker to build an Image, Grype to check our image, Sonar to analyze our code and, finally, Docker again to run our application.
+The project uses GitHub plugin to clone our application, maven to build our java app, JUnit 5 to test, Docker to build the Image, Grype to check our image, Sonar to analyze our code and, finally, Docker again to run our application.
 
 # Jenkins set up
 
@@ -19,7 +20,7 @@ First of all, it is necessary to create an image out of the code I shared (the D
 docker build -t jenkins-docker . 
 ```
 
-Before running, let's create a network in docker. This will be usefull to make our jenkins and sonar communicate with each other.
+Before running, let's create a docker network. This will be usefull to make jenkins and sonar communicate with each other.
 
 ```code
  docker network create jenkins_net
@@ -38,7 +39,7 @@ Then, we run the image just created to deploy our container.
 "**-v jenkins_home:/var/jenkins_home**": This flag mounts a directory on the host machine to the /var/jenkins_home directory inside the container. This is where Jenkins stores its configuration and data.
 
 
-After that, we must configure our Jenkins. The following image will pop up and we must insert a code to unlock jenkins:
+After that, we must configure Jenkins. The following image will pop up and we must insert a code to unlock jenkins:
 
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/237a0aab-c440-4a85-a53c-9d672c72fa30)
 
@@ -58,14 +59,14 @@ Finally, we copy the code from the log and paste it on jenkins. Then, choose to 
 
 ## Configuring Maven
 
-We already downloaded it during the image creation. With that in mind, we just need to download the Maven plugin and inform jenkins where our package lies on (feel free to upgrade jenkins).
+We have already downloaded it during the image creation. With that in mind, we just need to download the Maven plugin and inform jenkins where our package lies on (feel free to upgrade jenkins).
 
 Go to "Manage Jenkins -> Plugins -> Available Plugins" and look for "Maven". Choose "Maven Integration" like the image below.
 
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/730f1abb-20c8-475b-a2eb-084fd03df85a)
 
 
-After installing the plugin, we go to "Manage Jenkins -> Tools -> look for "Jenkins Installations" and click on "Add Maven". With that, we fill the fields out like the image below. ]
+After installing the plugin, we go to "Manage Jenkins -> Tools -> look for "Jenkins Installations" and click on "Add Maven". With that, we fill the fields out like the image below.
 Apply and save it.
 
 
@@ -102,7 +103,7 @@ Pull the Sonar image from Docker Hub, using:
  docker pull sonarqube
 ```
 
-Then, run this image to create a container em port 9000.
+Then, run this image to create a container on port 9000.
 
 ```code
  docker run -d --name sonarqube --network jenkins_net -p 9000:9000 sonarqube
@@ -114,7 +115,7 @@ User: admin
 Password: admin
 
 
-Going ahead, it is necessary to install a package inside our jenkins path to make our just created caontainer communicate with jenkins. To do that, firstly, create a sonar-scanner directory under /var/jenkins_home and, then, download SonarQube Scanner (wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip)
+Going ahead, it is necessary to install a package inside our jenkins path to make the just created container communicate with jenkins. To do that, firstly, create a sonar-scanner directory under /var/jenkins_home and, then, download SonarQube Scanner (wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip)
 
 ```code
  docker exec -it jenkins bash
@@ -146,7 +147,7 @@ After that, go to Manage Jenkins -> Tools and click on "Add SonarQube Installati
 
 Click on "Apply" and "Save".
 
-Once we already set up the SonarQube Installations it's time to configure SonarQube Server. Considering we are running Jenkins as well as Sonar on a Docker container, sharing the same network, they are accessible from each other. With that in mind, let's check the containers ip.
+Once we already set up the SonarQube Installations it's time to configure SonarQube Server. Considering we are running Jenkins as well as Sonar on a Docker container, sharing the same network, they are accessible from each other. With that in mind, let's check the container ips.
 
 ```code
 docker network inspect jenkins_net
@@ -220,17 +221,16 @@ As soon as we follow these steps, we are ready to click on "Locally" to generate
 
 Copy the code and click on "Continue"
 
-code generated: sqp_1c85b1f08775b76009d1be84e9a1699d8af9894e
 
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/e2ae8f18-5e6f-4dc4-b1eb-98c2ff32d815)
 
 
 After that, we go back to Jenkins. There, we go to "Manage Jenkins" -> "Credentials" -> "System" -> "Global credentials (unrestricted)"
 
-Firstly, we define a name to this server (I choose "Sonar").
+Firstly, we define a name to this server (I've chosen "Sonar").
 After these steps, we click on "Advanced" -> "+ Add" -> "Jenkins". When a new window pops up, we choose "Secret Text" in "Kind", paste our Sonar key there and give an "id" to this key (I named it as "Sonar_Secret"
 
-Finally, just pick the token secret just create from the list in "Server Authentication token" and click on "Create Credential". There, we choose "Secret Text" as "Kind". We also provide our SonarQube token in "Secret" and we must also choose an ID to our Secret.
+Finally, just pick the token secret just create from the list on "Server Authentication token" and click on "Create Credential". There, we choose "Secret Text" as "Kind". We also provide our SonarQube token in "Secret" and we must also choose an ID to our Secret.
 
 
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/a162fe08-0e1a-4a37-905f-6acb4c0e9669)
@@ -267,7 +267,7 @@ Finally, paste the following code on "Script":
 
 It is important to pay attention to "environment" section, because we are defining our Environment Variables. It contains our repository on DockerHub (gustavoh430/loginappjenkins) as well as the GitHub repostiory (https://github.com/gustavoh430/loginproject.git).
 
-**Edit these environment variables to suit your case.**
+**Edit these environment variables to suit to your case.**
 
 Then, save it.
 
