@@ -18,10 +18,16 @@ First of all, it is necessary to create an image out of the code I shared (the D
 docker build -t jenkins-docker . 
 ```
 
+Before running, let's create a network in docker. This will be usefull to make our jenkins and sonar communicate with each other.
+
+```code
+ docker network create jenkins_net
+```
+
 Then, we run the image just created to deploy our container.
 
 ```code
- docker run --name jenkins  -p 8081:8080 -d  -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home jenkins-docker
+ docker run --name jenkins  -p 8081:8080 -d --network jenkins_net -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home jenkins-docker
 ```
 
 
@@ -98,7 +104,7 @@ Pull the Sonar image from Docker Hub, using:
 Then, run this image to create a container em port 9000.
 
 ```code
- docker run -d --name sonarqube -p 9000:9000 sonarqube
+ docker run -d --name sonarqube --network jenkins_net -p 9000:9000 sonarqube
 ```
 
 Access it from http://localhost:9000 and login with the following credentials:
@@ -139,9 +145,77 @@ After that, go to Manage Jenkins -> Tools and click on "Add SonarQube Installati
 
 Click on "Apply" and "Save".
 
-The, we go to our SonarQube from http://localhost:9000, click on "My Account" -> "Security" -> "Generate Token"
+Once we already set up the SonarQube Installations it's time to configure SonarQube Server. Considering we are running Jenkins as well as Sonar on a Docker container, sharing the same network, they are accessible from each other. With that in mind, let's check the containers ip.
 
-![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/1c12cca6-ba27-4f8b-88bc-645ca81ae253)
+```code
+docker network inspect jenkins_net
+```
+
+```json
+[
+    {
+        "Name": "jenkins_net",
+        "Id": "cb10e08de51b27b3921f1569ed8b4ab93ced15f52ecc009dd3c8071332c32c6d",
+        "Created": "2023-11-16T09:17:26.43303887Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "97ed98aff41f8699ff00d00b69298caf8a59a28f007759251e57791a6cd48dc0": {
+                "Name": "jenkins",
+                "EndpointID": "222262c9dbc7b238ed61d716a6fde6a9846e29109a58114b4aab6b4c71e32f9e",
+                "MacAddress": "02:42:ac:12:00:02",
+                "IPv4Address": "172.18.0.2/16",
+                "IPv6Address": ""
+            },
+            "c05554afc4add98afdc79cd677a217b48b558792cbb0bd2c5a4630fc7e688c08": {
+                "Name": "sonarqube",
+                "EndpointID": "c42a4e260cb730e350775fe33b0c0028f3ace79f0fdce6590431306a0c3c8e0b",
+                "MacAddress": "02:42:ac:12:00:03",
+                "IPv4Address": "172.18.0.3/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]
+```
+
+As seen, the sonarqube ip is: "172.18.0.3". Thus, this will be the address which we are going to use during SonarQube Server configuring.
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/96b6f140-4ac2-4f08-9f68-eb8949c45653)
+
+
+Then, in order to prepare SonarQube, we go to our SonarQube from http://localhost:9000, click on "Create a Local Project"
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/0723e73c-1fa4-4eaf-ac06-63e52aac429f)
+
+Give a name to your Sonar repository and click "Next". 
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/175e2489-dcca-48dc-8c1c-4ecbe63d18e3)
+
+Then, flag "Use the Global Setting" and click on "Create Project"
+As soon as we follow these steps, we are ready to 
+
+
 
 After that, we go back to Jenkins. There, go to "Manage Jenkins" -> "System" -> SonarQube Servers
 
