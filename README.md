@@ -433,3 +433,33 @@ On Blue Ocean Page, click on "Tests". This will return the following information
 
 ![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/c7d18b02-d146-4268-abac-1ecf0cb1d91e)
 
+
+
+# Testing the Application
+
+We have deployed our application on a docker container, running on port 8080. Let's make some calls to it using Postman.
+
+
+## Signin up
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/b49cb0c8-9674-4e26-aaff-c1af0e64d9a3)
+
+
+## Signing in
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/c3521f4e-7580-4041-b36f-564cd3e4ac72)
+
+
+### Other methods can be found at "https://github.com/gustavoh430/loginproject"
+
+
+# Author
+
+Hi, I'm Gustavo!
+
+I have been working as an SRE & Observability Analyst for two years already. As most of SREs, I work analyzing infraestructure and services in a massive Cloud based ecosystem, using traces, logs and metrics.
+
+Contacts:
+Email: gustavoh430@gmail.com
+
+Linkedin: https://www.linkedin.com/in/gustavohgodinho/
