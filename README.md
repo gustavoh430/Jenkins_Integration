@@ -6,7 +6,8 @@ This project aims to create a CI/CD integration pipeline which will use the foll
 
 The final pipeline will looks like the image below:
 
-![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/00d7c356-343f-4fda-9387-ab2085fe42e1)
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/8375fd91-23d2-448f-a1ca-c135dbd3ec87)
+
 
 The project uses GitHub plugin to clone our application, maven to build our java app, JUnit 5 to test, Docker to build an Image, Grype to check our image, Sonar to analyze our code and, finally, Docker again to run our application.
 
@@ -27,7 +28,7 @@ Before running, let's create a network in docker. This will be usefull to make o
 Then, we run the image just created to deploy our container.
 
 ```code
- docker run --name jenkins  -p 8081:8080 -d --network jenkins_net -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home jenkins-docker
+ docker run --name jenkins  -p 8082:8082 -d --network jenkins_net -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home jenkins-docker
 ```
 
 
@@ -248,19 +249,173 @@ Remember to create a repository on DockerHub ("https://github.com/gustavoh430/Do
 
 We must follow the Grype Documtation to install it properly (https://github.com/anchore/grype/blob/main/README.md).
 
-Basically, we only need to install a package on a certain folder and install grype plugin.
+Basically, we only need to install a package on a certain folder and install grype plugin (already done).
 
-1. Grype package
+Grype package
 
 ```code
 docker exec -it jenkins bash
 curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
 ```
 
-2. Grype plugin
 
-![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/81673999-6812-4ac2-aa87-c62dfeafc33e)
+# Creating Jenkins Pipeline
 
+In Jenkins home, go to "+ New Item", give a name to it and select "Pipeline".
+
+Finally, paste the following code on "Script":
+
+It is important to pay attention to "environment" section, because we are defining our Environment Variables. It contains our repository on DockerHub (gustavoh430/loginappjenkins) as well as the GitHub repostiory (https://github.com/gustavoh430/loginproject.git).
+
+**Edit these environment variables to suit your case.**
+
+Then, save it.
+
+```jenkins
+pipeline {
+    agent any
+
+    environment {
+        // Define environment variables
+        MAVEN_HOME = tool 'Maven'
+        repository = "gustavoh430/loginappjenkins"
+        dockerImage = ''
+        gitImage= "https://github.com/gustavoh430/loginproject.git"
+        dockerCredentials= 'dockerCred_id'
+    }
+    
+    stages {
+        
+        stage('Cloning our Git') {
+            steps {
+                git branch:'loginproject_h2', url: gitImage
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    def mvnHome = tool 'Maven'
+                    sh "${mvnHome}/bin/mvn clean install -DskipTests=true"
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+              sh "chmod +x -R ${env.WORKSPACE}"
+              sh(script: './mvnw --batch-mode -Dmaven.test.failure.ignore=true test')
+            }
+            post {
+                always {
+                     junit(testResults: 'target/surefire-reports/*.xml', allowEmptyResults : true)
+                        }
+                }
+
+        }
+        
+         stage('Creating Docker Image') {
+                steps{
+                    script {
+                        dockerImage = docker.build repository
+                            }
+                    }
+                }
+                
+        stage('Update Docker Hub Image') {
+                steps{
+                    script {
+                    docker.withRegistry( '', dockerCredentials ) {
+                    dockerImage.push("$BUILD_NUMBER")
+                    dockerImage.push('latest')
+                        }
+                    }
+                }
+        }
+        
+        stage("SonarQube Analysis") {
+            
+                steps {
+                        script{
+                        
+                        withSonarQubeEnv('SonarServer') {
+                        sh "mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=loginproject \
+                        -Dsonar.projectName='loginproject'"
+                            }
+                        }
+                }
+                
+                
+            }
+            
+            
+        
+        
+        stage('Check Image Security: Grype') {
+                steps{
+                    script {
+                    sh 'grype $repository --scope AllLayers'
+                    grypeScan scanDest: 'dir:/var/jenkins_home', repName: 'myScanResult.txt', autoInstall:true
+                    }
+                }
+        }
+        
+        stage ("Shutting Down Running Containers") {
+	            steps {
+		                script {
+		                    sh 'docker ps -f name=loginproject -q | xargs --no-run-if-empty docker container stop'
+                            sh 'docker container ls -a -fname=loginproject -q | xargs -r docker container rm'
+		                }
+	        }
+        }
+        
+        stage('Deploy: Docker Container') {
+                steps{
+                    script {
+                    docker.image("$repository:$BUILD_NUMBER").run ("-p 8080:8080 -d --name loginproject")
+                    }
+                }
+        }
+        
+
+
+    }
+}
+  
+```
+
+Once you have followed all these steps, we are ready to start the pipeline.
+
+
+# Starting Pipeline with Blue Ocean
+
+Inside our pipeline, click on "Open Blue Ocean"
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/c3a7834e-4c5e-4ccf-b550-492c0b91d229)
+
+
+Click on Run (This image only pops up if we are running it for the first time).
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/72f89217-da88-4282-9b6d-0b1d9bb906a0)
+
+
+Click on the line that has just appeared. After this, the running pipeline status will be visible to us.
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/b2b174d8-626d-4c9b-88f7-d2a8252ca612)
+
+
+We should run the pipe successfully like the image below
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/8375fd91-23d2-448f-a1ca-c135dbd3ec87)
+
+
+# Checking the application report from SonarQube
+
+Access the project we have created befone on SonarQube, through "http://localhost:9000". Here, we can see that our application passed the verification without any blocks (we did not configured). Furthermore, we also see that there are some Bugs, vulnerabilities and Code smells.
+
+![image](https://github.com/gustavoh430/Jenkins_Integration/assets/41215245/0bd12f4c-907a-472e-85e8-0ee3831b91a5)
+
+# Checking the image report generated from Grype
 
 
 
